@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew :app:generateAutolinkingNewArchitectureFiles --rerun-tasks)",
+      "Bash(./gradlew :app:generateAutolinkingNewArchitectureFiles --info)",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\(''''/home/user/projects/Tap the Circle game/android/build/generated/autolinking/autolinking.json''''\\)\\); print\\(json.dumps\\(d.get\\(''''project'''',{}\\), indent=2\\)\\)\")"
+    ]
+  }
+}

@@ -1,4 +1,4 @@
-package com.tapthecircle
+package com.mygame.tapthecircle
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

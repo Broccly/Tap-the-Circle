@@ -1,4 +1,4 @@
-package com.tapthecircle
+package com.mygame.tapthecircle
 
 import android.app.Application
 import com.facebook.react.PackageList
