@@ -1,4 +1,7 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
+import Sound from 'react-native-sound';
+
+Sound.setCategory('Playback');
 import {
   View,
   Text,
@@ -84,6 +87,21 @@ export default function App() {
   const circleLifetimeRef = useRef(INITIAL_CIRCLE_LIFETIME);
   const scoreRef = useRef(0);
   const comboRef = useRef(0);
+  const tapSoundRef = useRef<Sound | null>(null);
+  const introSoundRef = useRef<Sound | null>(null);
+
+  useEffect(() => {
+    tapSoundRef.current = new Sound('tap.wav', Sound.MAIN_BUNDLE, err => {
+      if (err) console.log('tap sound error', err);
+    });
+    introSoundRef.current = new Sound('intro.wav', Sound.MAIN_BUNDLE, err => {
+      if (err) console.log('intro sound error', err);
+    });
+    return () => {
+      tapSoundRef.current?.release();
+      introSoundRef.current?.release();
+    };
+  }, []);
 
   const stopGame = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -177,6 +195,9 @@ export default function App() {
     }, 1000);
 
     spawnRef.current = setTimeout(spawnCircle, 300);
+
+    introSoundRef.current?.stop();
+    introSoundRef.current?.play();
   }, [spawnCircle, endGame]);
 
   const handleCircleTap = useCallback((circleId: number) => {
@@ -200,6 +221,9 @@ export default function App() {
 
       return prev.filter(c => c.id !== circleId);
     });
+
+    tapSoundRef.current?.stop();
+    tapSoundRef.current?.play();
 
     comboRef.current += 1;
     setCombo(comboRef.current);
