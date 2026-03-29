@@ -1,4 +1,5 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Sound from 'react-native-sound';
 
 Sound.setCategory('Playback');
@@ -47,6 +48,8 @@ const CIRCLE_COLORS = [
   '#F1948A',
   '#85C1E9',
 ];
+
+const BEST_SCORE_KEY = 'best_score';
 
 let circleIdCounter = 0;
 
@@ -103,6 +106,12 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    AsyncStorage.getItem(BEST_SCORE_KEY).then(val => {
+      if (val !== null) setBestScore(parseInt(val, 10));
+    });
+  }, []);
+
   const stopGame = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
     if (spawnRef.current) clearTimeout(spawnRef.current);
@@ -115,7 +124,11 @@ export default function App() {
     gameStateRef.current = 'gameover';
     setGameState('gameover');
     setCircles([]);
-    setBestScore(prev => Math.max(prev, scoreRef.current));
+    setBestScore(prev => {
+      const newBest = Math.max(prev, scoreRef.current);
+      AsyncStorage.setItem(BEST_SCORE_KEY, String(newBest));
+      return newBest;
+    });
   }, [stopGame]);
 
   const spawnCircle = useCallback(() => {
